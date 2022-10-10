@@ -1,0 +1,21 @@
+.full-width {
+    width: 100%;
+    background-color: #fff;
+    margin-top: 1em;
+}
+
+.loading-form {
+    width: 100%;
+    min-height: 13em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+}
+.button-footer {
+    margin-right: 12px;
+}

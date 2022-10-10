@@ -1,0 +1,143 @@
+
+  <div class="row">
+    <div class="col-md-12">
+      <mat-card>
+        <!--<mat-card-title>Simulador de cálculo</mat-card-title>
+        <mat-card-subtitle>Diligencia el siguiente formulario y conoce el valor de la prima que debes pagar.</mat-card-subtitle>-->
+        <mat-card-content >
+          <div *ngIf="loading" class="loading-form">
+            <mat-spinner></mat-spinner>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-6">
+              <mat-form-field class="full-width" >
+                <mat-label>Primer Nombre</mat-label>
+                <input matInput name="firstName" [(ngModel)]="contentForm.firstName" [disabled]="flagForm" appearance="fill" required>
+                <mat-error *ngIf="!contentForm.firstName">Ingresa Nombre</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <mat-form-field class="full-width">
+                <mat-label>Segundo Nombre</mat-label>
+                <input matInput name="middleName" [(ngModel)]="contentForm.middleName" appearance="fill" [disabled]="flagForm">
+              </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <mat-form-field class="full-width">
+                <mat-label>Primer Apellido</mat-label>
+                <input matInput name="firstLastName" [(ngModel)]="contentForm.firstLastName" [disabled]="flagForm" required>
+                <mat-error *ngIf="!contentForm.firstLastName">Ingresa Apellido</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <mat-form-field class="full-width">
+                <mat-label>Segundo Apellido</mat-label>
+                <input matInput name="secondLastName" [(ngModel)]="contentForm.secondLastName" [disabled]="flagForm">
+              </mat-form-field>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <mat-form-field class="full-width">
+                  <mat-label>Tipo identificación</mat-label>
+                  <mat-select [(ngModel)]="contentForm.idType" [ngModelOptions]="{standalone: true}" [disabled]="flagForm" required>
+                      <mat-option *ngFor="let value of idTypes" [value]="value.value">
+                          {{value.viewValue}}
+                      </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="contentForm.idType">
+                      <strong>seleccione tipo de identifiacaión</strong>
+                  </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <mat-form-field class="full-width">
+                <mat-label>Número identificación</mat-label>
+                <input matInput name="idNumber" [(ngModel)]="contentForm.idNumber" [disabled]="flagForm" required>
+                <mat-error *ngIf="!contentForm.idNumber">Ingresa número identificación</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <mat-form-field class="full-width">
+                <mat-label>Fecha de nacimiento</mat-label>
+                <input
+                  matInput
+                  name="sampleTakeDate"
+                  placeholder="Fecha de nacimeinto"
+                  [matDatepicker]="sampleTakeDate"
+                  [(ngModel)]="contentForm.birthDate"
+                  [max]="maxDate"
+                  [disabled]="flagForm"
+                  required
+                />
+                <mat-datepicker-toggle matSuffix [for]="sampleTakeDate"></mat-datepicker-toggle>
+                <mat-datepicker #sampleTakeDate startView="multi-year" disabled="false"></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="col-lg-6 col-md-6 ">
+              <mat-form-field class="full-width">
+                <mat-label>Número de Contacto</mat-label>
+                <input matInput name="contact" [(ngModel)]="contentForm.contact" [disabled]="flagForm" required>
+                <mat-icon matSuffix>phone_android</mat-icon>
+                <mat-error *ngIf="!contentForm.contact">Ingresa número celular</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-md-12">
+              <mat-form-field class="full-width">
+                <mat-label>Valor Predio a asegurar</mat-label>
+                <input matInput min="0" currencyMask [options]="{ prefix: 'COP $ ', thousands: '.', precision: 0 }" name="propertyValue" [(ngModel)]="contentForm.propertyValue" [disabled]="flagForm" required>
+                <mat-error *ngIf="!contentForm.propertyValue">Ingresa valor predio</mat-error>
+              </mat-form-field>
+            </div>
+            <div *ngIf="notificationQuote">
+              <div class="col-lg-12 col-md-12">
+                <table class="table table-striped">
+                  <tbody>
+                    <tr><th scope="row">No. Trámite</th><td>{{this.notificationQuote?.id}}</td><th scope="row">Fecha Creación</th><td>{{this.notificationQuote?.dateCreated | date:'medium'}}</td></tr>
+                    <tr><th scope="row">Asociado</th><td>{{this.notificationQuote?.nombre}} {{this.notificationQuote?.apellido}}</td><th scope="row">Identificación</th><td>{{this.notificationQuote?.tipoDeIdentificacion}} {{this.notificationQuote?.numeroDeIdentificacion}}</td></tr>
+                    <tr>
+                      <th scope="row">Valor a asegurar</th><td>$ {{this.notificationQuote?.valorDelPredioAAsegurar | number:'1.0-0'}}</td>
+                      <th scope="row">Listas restrictivas</th>
+                      <td>
+                        <div *ngIf="this.notificationQuote?.consultaListaRestrictiva; else elseBlock">
+                          <span class="badge bg-danger">Aplica</span>
+                        </div>
+                        <ng-template #elseBlock>
+                          <span class="badge bg-success">No aplica</span>
+                        </ng-template>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-footer>
+          <div class="row col-lg-12">
+            <mat-card-actions align="end">
+              <button 
+                mat-raised-button 
+                (click)="cleanForm()"
+                color="default" >
+                Limpiar
+              </button>
+              <button
+                mat-raised-button 
+                (click)="checkRestrictiveLists()"
+                color="accent"
+                [disabled]="contentForm.firstName && 
+                            contentForm.firstLastName &&
+                            contentForm.idType &&
+                            contentForm.idNumber &&
+                            contentForm.contact &&
+                            contentForm.propertyValue &&
+                            contentForm.birthDate ? false : true" >
+                Consultar
+              </button>
+            </mat-card-actions>
+          </div>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </div>
+
